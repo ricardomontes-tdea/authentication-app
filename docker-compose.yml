@@ -1,0 +1,30 @@
+version: '3.9'
+
+services: 
+  #MONGO SERVICE
+  authetication_mongo_db:
+    container_name: mongodb_authetication
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+  
+  #API NODE
+  authetication_api:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      # local->container
+      - 3000:3000
+    environment:
+      APP_PORT: 3000
+      MONGODB_URI: mongodb://authetication_mongo_db:27017
+      DB_NAME: authetication_db
+    depends_on:
+      - authetication_mongo_db
+
+volumes:
+  mongo_data: {}
